@@ -40,7 +40,7 @@ var QUESTIONS = [
         correct: 3
     }
 ];
-
+// DOM Manipulation
 var questionsPageElement = $('.questions-page');
 var questionCurrentElement = $('.question-current');
 var questionsTotalElement = $('.questions-total');
