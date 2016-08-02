@@ -55,8 +55,16 @@ quizModel.prototype.nextQuestion = function() {
   return this.currentquestion++;
 }
 
-quizModel.prototype.checkAnswers = function() {
+quizModel.prototype.answer = function(answer) {
+  this.useranswers.push(answer);    
+}
 
+quizModel.prototype.checkAnswers = function() {
+  for (var i = 0; i < this.useranswers.length; i++) {
+    if (this.useranswers[0] == this.questions[0].correct) {
+      this.score ++ ;
+    }  
+  };
 }
 
 var myQuiz = new quizModel();
@@ -64,9 +72,13 @@ var myQuiz = new quizModel();
 // myQuiz.getQuestion();
 // myQuiz.nextQuestion();
 // console.log(myQuiz.getQuestion());
-
-
-
+myQuiz.answer(0);
+myQuiz.answer(1);
+myQuiz.answer(2);
+myQuiz.answer(3);
+myQuiz.checkAnswers();
+console.log(myQuiz.useranswers);
+console.log(myQuiz.score);
 
 /// if answer = questions[i].correct.val(); increment this.score.
 /// push answer to useranswer
