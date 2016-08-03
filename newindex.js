@@ -56,14 +56,14 @@ quizModel.prototype.nextQuestion = function() {
 }
 
 quizModel.prototype.answer = function(answer) {
-  this.useranswers.push(answer);    
+  this.useranswers.push(answer);
 }
 
 quizModel.prototype.checkAnswers = function() {
   for (var i = 0; i < this.useranswers.length; i++) {
     if (this.useranswers[i] == this.questions[i].correct) {
       this.score ++ ;
-    }  
+    }
   };
 }
 
@@ -87,7 +87,7 @@ console.log(myQuiz.score);
 
 /// What does View want from Model?
 /// questions, answers, score, currentquestion, useranswers
-var quizView = function(questionsSelector) {
+var quizView = function (questionsSelector, questionCurrent, questionsTotal, question, answers, resultsPage, score, restartButton) {
   this.questionsPageElement = $(questionsSelector);
   this.questionCurrentElement = $(questionCurrent);
   this.questionsTotalElement = $(questionsTotal);
@@ -97,6 +97,8 @@ var quizView = function(questionsSelector) {
   this.scoreElement = $(score);
   this.restartButtonElement = $(restartButton);
 }
+quizView.prototype.render
+
 quizView.prototype.showResults = function() {
     questionsPageElement.hide();
     resultsPageElement.show();
@@ -108,7 +110,40 @@ quizView.prototype.displayQuestion = function() {
   console.log(this.questions.text[this.currentquestion]);
 };
 
-var myQuizView = new quizView('.questions-page',...);
+quizView.prototype.resetScore = function() {
+    scoreElement.text(0);
+};
+quizView.prototype.increaseScore = function() {
+    var score = parseInt(scoreElement.text(), 10);
+    scoreElement.text(score + 1);
+};
+quizView.prototype.setQuestion = function(currentquestion) {
+    var question = questions[currentquestion];
+    questionCurrentElement.text(currentquestion);
+    questionElement.text(question.text);
+    answersElement.empty();
+    for (var i=0; i<question.answers.length; i++) {
+        var answer = question.answers[i];
+        answersElement.append('<li><button type="button">' + answer + '</button></li>');
+    }
+};
+quizView.prototype.answersElement.on('click', 'button', function() {
+    var choice = $(this).parent().index();
+    var currentquestion = parseInt(questionCurrentElement.text(), 10);
+    var question = questions[currentquestion];
+    if (question.correct === choice) {
+        increaseScore();
+    }
+
+    if (currentquestion + 1 < questions.length) {
+        setQuestion(currentquestion + 1);
+    }
+    else {
+        showResults();
+    }
+
+var myQuizView = new quizView('.questions-page','.question-current','.questions-total', '.question', '.answers',
+  '.results-page', '.score', '.restart-button');
 // quizView.prototype.resetScore = function() {
 //     scoreElement.text(0);
 // };
@@ -144,5 +179,5 @@ var myQuizView = new quizView('.questions-page',...);
 //show questions to the DOM
 //accept answers
 //show question number
-//change questions 
+//change questions
 //show report card
