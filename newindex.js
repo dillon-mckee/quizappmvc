@@ -44,6 +44,7 @@ var quizModel = function (){
         correct: 3
     }
   ];
+  this.onUpdate = null;
 }
 quizModel.prototype.getQuestion = function(questionIndex) {
   // return this.currentquestion
@@ -53,6 +54,9 @@ quizModel.prototype.getQuestion = function(questionIndex) {
 
 quizModel.prototype.nextQuestion = function() {
   return this.currentquestion++;
+  if (this.onUpdate){
+    this.onUpdate();
+  }
 }
 
 quizModel.prototype.answer = function(answer) {
@@ -90,15 +94,20 @@ quizView.prototype.showResults = function() {
     resultsPageElement.show();
 };
 
-quizView.prototype.render = function() {
-  this.questionElement.text("hello world")
-  this.questionCurrentElement.text("1")
-  this.questionsTotalElement.text("4")
-  /// insert for loop for answersElement
+// quiz.render('my question', [1,2,34,], 0, )
+
+quizView.prototype.render = function(question, questionCurrent, questionsTotal) {
+  this.questionElement.text(question)
+  this.questionCurrentElement.text(questionCurrent)
+  this.questionsTotalElement.text(questionsTotal)
+    for (var j=0; j<question.answers.length; j++) {
+        var answer = question.answers[j];
   this.answersElement.append('<li><button type="button">' + "answer1" + '</button></li>')
   /// if statement for resultsPageElement, scoreElement, restartButtonElement
 
 }
+
+// x.render('What color is the sky', 2, 2)
 
 // //quizView.prototype.answersElement.on('click', 'button', function() {
 //     var choice = $(this).parent().index();
@@ -114,30 +123,41 @@ quizView.prototype.render = function() {
 //     else {
 //         showResults();
 //     }
-var myQuiz = new quizModel();
 
 // myQuiz.getQuestion();
 // myQuiz.nextQuestion();
 // console.log(myQuiz.getQuestion());
 
-myQuiz.answer(0);
-myQuiz.answer(1);
-myQuiz.answer(2);
-myQuiz.answer(3);
-myQuiz.checkAnswers();
-console.log(myQuiz.useranswers);
-console.log(myQuiz.score);
+// myQuiz.answer(0);
+// myQuiz.answer(1);
+// myQuiz.answer(2);
+// myQuiz.answer(3);
+// myQuiz.checkAnswers();
+// console.log(myQuiz.useranswers);
+// console.log(myQuiz.score);
 
 var myQuizView = new quizView('.questions-page','.question-current','.questions-total', '.question', '.answers',
   '.results-page', '.score', '.restart-button');
 
-myQuizView.render();
+myQuizView.render('a question', 7, 9);
 
 var Controller = function(model, view) {
-  var view = quizView
-  var model = quizModel
+  model.onUpdate = function() {
+    console.log('test');
+  }
+
+  model.nextQuestion();
 
 }
+
+$(document).ready(function(){
+  var myQuiz = new quizModel();
+  var myQuizView = new quizView('.questions-page','.question-current','.questions-total', '.question', '.answers',
+  '.results-page', '.score', '.restart-button');
+  var controller = new Controller(myQuiz, myQuizView);
+});
+
+
 
 //show questions to the DOM
 //accept answers

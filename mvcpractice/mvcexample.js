@@ -3,15 +3,15 @@
 // setting this.OnChange to null
 var Model = function() {
   this.text = "";
-  this.onChange = null;
+  this.onUpdate = null;
 };
 
 // Adding setText method which converts everything to uppercase
 // eventListener listening for change on DOM
 Model.prototype.setText = function(value) {
   this.text = value.toUpperCase();
-  if (this.onChange) {
-    this.onChange(this.text);
+  if (this.onUpdate) {
+    this.onUpdate(this.text);
   }
 };
 
@@ -52,7 +52,7 @@ View.prototype.setValue = function(text) {
 
 var Controller = function(model, view) {
   view.onChange = model.setText.bind(model);
-  model.onChange = view.setValue.bind(view);
+  model.onUpdate = view.setValue.bind(view);
 };
 
 //document.addEventListener('DOMContentLoaded', function() {
